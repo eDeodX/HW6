@@ -76,7 +76,7 @@ jobs:
         run: choco install wixtoolset -y
 
       - name: Configure CMake
-        run: cmake -H. -B_build
+        run: cmake -S. -B_build
 
       - name: build project
         run: cmake --build _build --config Release
