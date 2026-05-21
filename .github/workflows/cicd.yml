@@ -66,32 +66,32 @@ jobs:
             _build/*.dmg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    windows:
-      runs-on: macos-latest
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
+  windows:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        - name: Install WIX
-          uses: choco install wixtoolset -y
+      - name: Install WIX
+        uses: choco install wixtoolset -y
 
-        - name: Configure CMake
-          run: cmake -H. -B_build
+      - name: Configure CMake
+        run: cmake -H. -B_build
 
-        - name: build project
-          run: cmake --build _build --config Release
+      - name: build project
+        run: cmake --build _build --config Release
 
-        - name: build ZIP package
-          run: cpack -G "ZIP" -B _build -C Release
+      - name: build ZIP package
+        run: cpack -G "ZIP" -B _build -C Release
 
-        - name: build MSI package
-          run: cpack -G "WIX" -B _build -C Release
+      - name: build MSI package
+        run: cpack -G "WIX" -B _build -C Release
 
-        - name: upload packages to release
-          uses: softprops/action-gh-release@v2
-          with:
-            files: |
-              _build/*.zip
-              _build/*.msi
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: upload packages to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            _build/*.zip
+            _build/*.msi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
