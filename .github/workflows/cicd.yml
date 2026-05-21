@@ -74,16 +74,16 @@ jobs:
         run: choco install wixtoolset -y
 
       - name: Configure CMake
-        run: cmake -S. -B _build
+        run: cmake -S. -B ${{ github.workspace}}/_build
 
       - name: build project
-        run: cmake --build _build --config Release
+        run: cmake --build ${{ github.workspace}}/_build --config Release
 
       - name: build ZIP package
-        run: cpack -G "ZIP" -B _build -C Release --config _build/CPackConfig.cmake
+        run: cpack -G "ZIP" -B ${{ github.workspace}}/_build -C Release --config ${{ github.workspace}}/_build/CPackConfig.cmake
 
       - name: build MSI package
-        run: cpack -G "WIX" -B _build -C Release --config _build/CPackConfig.cmake
+        run: cpack -G "WIX" -B ${{ github.workspace}}/_build -C Release --config ${{ github.workspace}}/_build/CPackConfig.cmake
 
       - name: upload packages to release
         uses: softprops/action-gh-release@v2
