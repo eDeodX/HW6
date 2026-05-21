@@ -56,7 +56,7 @@ jobs:
         run: cpack -G "TGZ" -B ${{ github.workspace}}/_build --config ${{ github.workspace}}/_build/CPackConfig.cmake
 
       - name: build DMG package
-        run: cpack -G "DragNdrop" -B ${{ github.workspace}}/_build --config ${{ github.workspace}}/_build/CPackConfig.cmake
+        run: cpack -G "DragNDrop" -B ${{ github.workspace}}/_build --config ${{ github.workspace}}/_build/CPackConfig.cmake
 
       - name: upload packages to release
         uses: softprops/action-gh-release@v2
