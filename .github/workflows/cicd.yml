@@ -2,6 +2,8 @@ name: Build and Release Packages
 
 on:
   push:
+    tags:
+      - 'v*'
 
 jobs:
   linux:
@@ -45,16 +47,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configure CMake
-        run: cmake -H. -B _build
+        run: cmake -H. -B ${{ github.workspace}}/_build
 
       - name: build project
-        run: cmake --build _build
+        run: cmake --build ${{ github.workspace}}/_build
 
       - name: build TGZ package
-        run: cpack -G "TGZ" -B _build --config _build/CPackConfig.cmake
+        run: cpack -G "TGZ" -B ${{ github.workspace}}/_build --config ${{ github.workspace}}/_build/CPackConfig.cmake
 
       - name: build DMG package
-        run: cpack -G "DragNdrop" -B _build --config _build/CPackConfig.cmake
+        run: cpack -G "DragNdrop" -B ${{ github.workspace}}/_build --config ${{ github.workspace}}/_build/CPackConfig.cmake
 
       - name: upload packages to release
         uses: softprops/action-gh-release@v2
@@ -83,7 +85,7 @@ jobs:
         run: cpack -G "ZIP" -B ${{ github.workspace}}/_build -C Release --config ${{ github.workspace}}/_build/CPackConfig.cmake
 
       - name: build MSI package
-        run: cpack -G "WIX" -B ${{ github.workspace}}/_build -C Release --config ${{ github.workspace}}/_build/CPackConfig.cmake
+        run: cpack -G "WIX" -B ${{ github.workspace}}/_build -C Release --config ${{ github.workspace}}/_build/CPackConfig.cmake --parallel
 
       - name: upload packages to release
         uses: softprops/action-gh-release@v2
