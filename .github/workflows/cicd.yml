@@ -1,0 +1,97 @@
+name: Build and Release Packages
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm
+
+      - name: Configure CMake
+        run: cmake -H. -B_build
+
+      - name: build project
+        run: cmake --build _build
+
+      - name: build TGZ package
+        run: cpack -G "TGZ" -B _build
+
+      - name: build DEB package
+        run: cpack -G "DEB" -B _build
+
+      - name: build RPM package
+        run: cpack -G "RPM" -B _build
+
+      - name: upload packages to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            _build/*.tar.gz
+            _build/*.deb
+            _build/*.rpm
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure CMake
+        run: cmake -H. -B_build
+
+      - name: build project
+        run: cmake --build _build
+
+      - name: build TGZ package
+        run: cpack -G "TGZ" -B _build
+
+      - name: build DMG package
+        run: cpack -G "DragNdrop" -B _build
+
+      - name: upload packages to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            _build/*.tar.gz
+            _build/*.dmg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    windows:
+      runs-on: macos-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Install WIX
+          uses: choco install wixtoolset -y
+
+        - name: Configure CMake
+          run: cmake -H. -B_build
+
+        - name: build project
+          run: cmake --build _build --config Release
+
+        - name: build ZIP package
+          run: cpack -G "ZIP" -B _build -C Release
+
+        - name: build MSI package
+          run: cpack -G "WIX" -B _build -C Release
+
+        - name: upload packages to release
+          uses: softprops/action-gh-release@v2
+          with:
+            files: |
+              _build/*.zip
+              _build/*.msi
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
