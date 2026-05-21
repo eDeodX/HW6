@@ -7,6 +7,8 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/solver_lib)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/hello_world_application)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/solver_application)
 
+install(TARGETS solver RUNTIME DESTINATION bin)
+
 set(PRINT_VERSION_MAJOR 0)
 set(PRINT_VERSION_MINOR 1)
 set(PRINT_VERSION_PATCH 0)

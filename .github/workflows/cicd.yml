@@ -15,27 +15,27 @@ jobs:
           sudo apt-get install -y rpm
 
       - name: Configure CMake
-        run: cmake -H. -B_build
+        run: cmake -H. -B ${{ github.workspace }}/_build
 
       - name: build project
-        run: cmake --build _build
+        run: cmake --build ${{ github.workspace }}/_build
 
       - name: build TGZ package
-        run: cpack -G "TGZ" -B _build
+        run: cpack -G "TGZ" -B ${{ github.workspace }}/_build
 
       - name: build DEB package
-        run: cpack -G "DEB" -B _build
+        run: cpack -G "DEB" -B ${{ github.workspace }}/_build
 
       - name: build RPM package
-        run: cpack -G "RPM" -B _build
+        run: cpack -G "RPM" -B ${{ github.workspace }}/_build
 
       - name: upload packages to release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            _build/*.tar.gz
-            _build/*.deb
-            _build/*.rpm
+            ${{ github.workspace }}/_build/*.tar.gz
+            ${{ github.workspace }}/_build/*.deb
+            ${{ github.workspace }}/_build/*.rpm
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   macos:
@@ -45,23 +45,23 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configure CMake
-        run: cmake -H. -B_build
+        run: cmake -H. -B ${{ github.workspace }}/_build
 
       - name: build project
-        run: cmake --build _build
+        run: cmake --build ${{ github.workspace }}/_build
 
       - name: build TGZ package
-        run: cpack -G "TGZ" -B _build
+        run: cpack -G "TGZ" -B ${{ github.workspace }}/_build
 
       - name: build DMG package
-        run: cpack -G "DragNdrop" -B _build
+        run: cpack -G "DragNdrop" -B ${{ github.workspace }}/_build
 
       - name: upload packages to release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            _build/*.tar.gz
-            _build/*.dmg
+            ${{ github.workspace }}/_build/*.tar.gz
+            ${{ github.workspace }}/_build/*.dmg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   windows:
@@ -74,22 +74,22 @@ jobs:
         run: choco install wixtoolset -y
 
       - name: Configure CMake
-        run: cmake -S. -B_build
+        run: cmake -S. -B ${{ github.workspace }}/_build
 
       - name: build project
-        run: cmake --build _build --config Release
+        run: cmake --build ${{ github.workspace }}/_build --config Release
 
       - name: build ZIP package
-        run: cpack -G "ZIP" -B _build -C Release
+        run: cpack -G "ZIP" -B ${{ github.workspace }}/_build -C Release
 
       - name: build MSI package
-        run: cpack -G "WIX" -B _build -C Release
+        run: cpack -G "WIX" -B ${{ github.workspace }}/_build -C Release
 
       - name: upload packages to release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            _build/*.zip
-            _build/*.msi
+            ${{ github.workspace }}/_build/*.zip
+            ${{ github.workspace }}/_build/*.msi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
