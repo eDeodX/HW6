@@ -67,7 +67,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   windows:
-    runs-on: macos-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
